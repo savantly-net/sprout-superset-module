@@ -1,0 +1,80 @@
+ext.ossrhUsername = System.getenv('OSSRH_USER') ? System.getenv('OSSRH_USER') : (project.hasProperty('ossrhUsername') ? project.ossrhUsername : '')
+ext.ossrhPassword = System.getenv('OSSRH_USER_TOKEN') ? System.getenv('OSSRH_USER_TOKEN') : (project.hasProperty('ossrhPassword') ? project.ossrhPassword : '')
+
+ext.versionPostfix = project.hasProperty('versionPostfix') ? project.versionPostfix : 'SNAPSHOT'
+version = '2.0.0-' + versionPostfix
+
+ext.isReleaseVersion = !version.toString().endsWith("-SNAPSHOT")
+
+signing {
+    required {
+        // signing is required if this is a release version and the artifacts are to be published
+        isReleaseVersion && tasks.withType(PublishToMavenRepository).find {
+             gradle.taskGraph.hasTask it
+        }
+    }
+    useGpgCmd()
+    sign publishing.publications
+}
+
+// Build, sign, and upload
+publishing {
+    publications {
+      mavenJava(MavenPublication) {
+          from components.java
+          afterEvaluate {
+              artifactId = 'superset-module'
+		  }
+          versionMapping {
+              usage('java-api') {
+                  fromResolutionOf('runtimeClasspath')
+              }
+              usage('java-runtime') {
+                  fromResolutionResult()
+              }
+          }
+          pom {
+            name = 'superset-module'
+            url = 'https://github.com/savantly-net/sprout-superset-module'
+            
+            description = 'Superset Module for Sprout'
+
+            licenses {
+                license {
+                    name = 'The Apache License, Version 2.0'
+                    url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                }
+            }
+
+            developers {
+                developer {
+                    id = 'jb'
+                    name = 'Jeremy Branham'
+                    email = 'Jeremy@Savantly.net'
+                    organization {
+                      name = 'savantly.net'
+                      url = 'http://savantly.net'
+                    }
+                }
+            }
+            scm {
+                connection = 'scm:git:ssh://github.com/savantly-net/sprout-superset-module.git'
+                developerConnection = 'scm:git:ssh://github.com/savantly-net/sprout-superset-module.git'
+                url = 'https://github.com/savantly-net/sprout-superset-module/tree/main'
+            }
+          }
+      }
+  }
+  repositories {
+    maven {
+      name = "OSSRH"
+      credentials {
+        username = ossrhUsername
+        password = ossrhPassword
+      }
+      def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2/"
+      def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots/"
+      url = isReleaseVersion ? releasesRepoUrl: snapshotsRepoUrl 
+    }
+  }
+}

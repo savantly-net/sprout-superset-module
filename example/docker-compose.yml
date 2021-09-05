@@ -1,0 +1,44 @@
+version: '3.7'
+services:
+
+
+  sprout-server:
+    image: savantly/sprout-superset-example-server:latest
+    container_name: sprout-superset-example-server
+    restart: always
+    ports:
+      - 8080:8080
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://db:5432/postgres
+      SPRING_JPA_DATABASE_PLATFORM: org.hibernate.dialect.PostgreSQLDialect
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+      SPRING_DATASOURCE_DRIVER_CLASS: org.postgresql.Driver
+      SPRING_DATASOURCE_USERNAME: sprout
+      SPRING_DATASOURCE_PASSWORD: sprout
+
+  webapp:
+    image: savantly/sprout-webapp
+    container_name: sprout-superset-example-webapp
+    restart: always
+    ports:
+      - 3000:3000
+    environment: 
+      - SPROUT_API_URL=http://sprout-superset-example-server:8080
+    depends_on: 
+      - sprout-server
+
+  db:
+    image: postgres:12
+    container_name: sprout-superset-example-db
+    restart: always
+    environment:
+      - POSTGRES_DB=sprout
+      - POSTGRES_PASSWORD=sprout
+      - POSTGRES_USER=sprout
+
+  adminer:
+    image: adminer
+    container_name: sprout-superset-example-adminer
+    restart: always
+    ports:
+      - 8081:8080

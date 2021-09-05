@@ -1,0 +1,22 @@
+buildscript {
+    repositories {
+        maven { url "https://plugins.gradle.org/m2/" }
+    }
+    dependencies {
+        classpath "io.freefair.gradle:lombok-plugin:5.1.0"
+    }
+}
+
+allprojects {
+    group = 'net.savantly.sprout.superset'
+    
+    repositories {
+    	mavenLocal()
+        mavenCentral()
+        gradlePluginPortal()
+        maven { url "https://repo.spring.io/plugins-release" }
+        maven {
+            url = uri('https://oss.sonatype.org/content/repositories/snapshots/')
+        }
+    }
+}

@@ -21,16 +21,16 @@
 
 # virtual machine crash logs, see http://www.java.com/en/download/help/error_hotspot.xml
 hs_err_pid*
+/.gradle/
+/build/
 
-# Ignore Gradle project-specific cache directory
-.gradle
-
-# Ignore Gradle build output directory
-build
-
-.settings
-
-.settings
-.classpath
-.DS_Store
+dist
+./bin
 node_modules
+
+src/main/resources/application-dev.yml
+.DS_STORE
+/.project
+/bin
+/.classpath
+/.settings

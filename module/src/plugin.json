@@ -1,0 +1,35 @@
+{
+  "type": "app",
+  "name": "Superset module",
+  "id": "superset",
+  "preload": true,
+  "info": {
+    "description": "Provides Superset charts in Sprout",
+    "author": {
+      "name": "Savantly",
+      "url": "https://savantly.net"
+    },
+    "keywords": [
+      "savantly",
+      "sprout",
+      "superset"
+    ],
+    "logos": {
+      "small": "./plugin/img/logo.svg",
+      "large": "./plugin/img/logo.svg"
+    },
+    "links": [
+      {
+        "name": "Website",
+        "url": "https://github.com/savantly-net/sprout-superset-module"
+      }
+    ],
+    "screenshots": [],
+    "version": "%VERSION%",
+    "updated": "%TODAY%"
+  },
+  "dependencies": {
+    "sproutVersion": "2.0.x",
+    "plugins": []
+  }
+}
